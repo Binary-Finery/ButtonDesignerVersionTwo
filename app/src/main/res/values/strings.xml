@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Button Designer Version Two</string>
+    <string name="tab_text_1">Border</string>
+    <string name="tab_text_2">Corners</string>
+    <string name="tab_text_3">Size</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="tab_text_4">Text</string>
+    <string name="tab_text_5">Color</string>
+</resources>
