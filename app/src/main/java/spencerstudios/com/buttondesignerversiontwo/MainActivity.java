@@ -49,46 +49,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
-
         prefs.registerOnSharedPreferenceChangeListener(this);
-
-        onSharedPreferenceChangeListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-            @Override
-            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
-                drawable = new GradientDrawable();
-
-                if (!Utils.getBooleanPrefs(context, "switch_corner")) {
-                    drawable.setCornerRadii(new float[]{
-                            convertDpToPx(Utils.getDimensionPrefs(context, "corner_tl")), //top left
-                            convertDpToPx(Utils.getDimensionPrefs(context, "corner_tl")), //top left
-                            convertDpToPx(Utils.getDimensionPrefs(context, "corner_tr")), //top right
-                            convertDpToPx(Utils.getDimensionPrefs(context, "corner_tr")), //top right
-                            convertDpToPx(Utils.getDimensionPrefs(context, "corner_br")), //bottom right
-                            convertDpToPx(Utils.getDimensionPrefs(context, "corner_br")), //bottom right
-                            convertDpToPx(Utils.getDimensionPrefs(context, "corner_bl")), //bottom left
-                            convertDpToPx(Utils.getDimensionPrefs(context, "corner_bl"))   //bottom left
-                    });
-                } else {
-                    int globalCornerRadius = Utils.getDimensionPrefs(context, "corner_all");
-                    drawable.setCornerRadii(new float[]{
-                            convertDpToPx(globalCornerRadius), //top left
-                            convertDpToPx(globalCornerRadius), //top left
-                            convertDpToPx(globalCornerRadius), //top right
-                            convertDpToPx(globalCornerRadius), //top right
-                            convertDpToPx(globalCornerRadius), //bottom right
-                            convertDpToPx(globalCornerRadius), //bottom right
-                            convertDpToPx(globalCornerRadius), //bottom left
-                            convertDpToPx(globalCornerRadius)   //bottom left
-                    });
-                }
-                Random r = new Random();
-                btn.setText(""+r.nextInt(100));
-
-                btn.setBackground(drawable);
-            }
-        };
-
-
     }
 
     @Override
@@ -103,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         }
 
         int sw = Utils.getDimensionPrefs(context, "stroke_width");
-        drawable.setStroke(convertDpToPx(sw), Color.RED);
+        drawable.setStroke(convertDpToPx(sw), Color.parseColor(Utils.getColorPrefs(context, "stroke_color")));
         drawable.setColor(Color.parseColor("#90CAF9"));
 
 

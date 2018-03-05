@@ -9,9 +9,17 @@ import android.view.ViewGroup;
 
 
 public class Frag3 extends Fragment {
+
+    View view;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.frag_3, container, false);
+        if (view == null) {
+            view = inflater.inflate(R.layout.frag_3, container, false);
+
+
+        }
+        return view;
     }
 }
