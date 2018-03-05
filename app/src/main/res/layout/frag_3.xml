@@ -4,11 +4,4 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="BUTTON SIZE"
-        android:fontFamily="sans-serif-smallcaps"
-        android:textSize="24sp"/>
-
 </LinearLayout>
