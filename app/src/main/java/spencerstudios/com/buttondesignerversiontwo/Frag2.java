@@ -17,50 +17,52 @@ import java.util.Locale;
 public class Frag2 extends Fragment implements SeekBar.OnSeekBarChangeListener {
 
     private TextView tvAll, tvTL, tvTR, tvBL, tvBR;
-    private Switch switchCorners;
+    View view;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.frag_2, container, false);
+        if (view==null) {
 
-        switchCorners = view.findViewById(R.id.switch_corners);
+            view = inflater.inflate(R.layout.frag_2, container, false);
 
-        AppCompatSeekBar cornerAll = view.findViewById(R.id.corners_all);
-        AppCompatSeekBar cornerTopLeft = view.findViewById(R.id.corners_top_left);
-        AppCompatSeekBar cornerTopRight = view.findViewById(R.id.corners_top_right);
-        AppCompatSeekBar cornerBottomLeft = view.findViewById(R.id.corners_bottom_left);
-        AppCompatSeekBar cornerBottomRight = view.findViewById(R.id.corners_bottom_right);
+            Switch switchCorners = view.findViewById(R.id.switch_corners);
 
-        tvAll = view.findViewById(R.id.tv_all_corners_dp);
-        tvTL = view.findViewById(R.id.tv_top_left_dp);
-        tvTR = view.findViewById(R.id.tv_top_right_dp);
-        tvBL = view.findViewById(R.id.tv_bottom_left_dp);
-        tvBR = view.findViewById(R.id.tv_bottom_right_dp);
+            AppCompatSeekBar cornerAll = view.findViewById(R.id.corners_all);
+            AppCompatSeekBar cornerTopLeft = view.findViewById(R.id.corners_top_left);
+            AppCompatSeekBar cornerTopRight = view.findViewById(R.id.corners_top_right);
+            AppCompatSeekBar cornerBottomLeft = view.findViewById(R.id.corners_bottom_left);
+            AppCompatSeekBar cornerBottomRight = view.findViewById(R.id.corners_bottom_right);
+
+            tvAll = view.findViewById(R.id.tv_all_corners_dp);
+            tvTL = view.findViewById(R.id.tv_top_left_dp);
+            tvTR = view.findViewById(R.id.tv_top_right_dp);
+            tvBL = view.findViewById(R.id.tv_bottom_left_dp);
+            tvBR = view.findViewById(R.id.tv_bottom_right_dp);
 
 
-        cornerAll.setOnSeekBarChangeListener(this);
-        cornerTopLeft.setOnSeekBarChangeListener(this);
-        cornerTopRight.setOnSeekBarChangeListener(this);
-        cornerBottomLeft.setOnSeekBarChangeListener(this);
-        cornerBottomRight.setOnSeekBarChangeListener(this);
+            cornerAll.setOnSeekBarChangeListener(this);
+            cornerTopLeft.setOnSeekBarChangeListener(this);
+            cornerTopRight.setOnSeekBarChangeListener(this);
+            cornerBottomLeft.setOnSeekBarChangeListener(this);
+            cornerBottomRight.setOnSeekBarChangeListener(this);
 
-        cornerAll.setProgress(Utils.getDimensionPrefs(getContext(), "corner_all"));
-        cornerTopLeft.setProgress(Utils.getDimensionPrefs(getContext(), "corner_tl"));
-        cornerTopRight.setProgress(Utils.getDimensionPrefs(getContext(), "corner_tr"));
-        cornerBottomLeft.setProgress(Utils.getDimensionPrefs(getContext(), "corner_bl"));
-        cornerBottomRight.setProgress(Utils.getDimensionPrefs(getContext(), "corner_br"));
+            cornerAll.setProgress(Utils.getDimensionPrefs(getContext(), "corner_all"));
+            cornerTopLeft.setProgress(Utils.getDimensionPrefs(getContext(), "corner_tl"));
+            cornerTopRight.setProgress(Utils.getDimensionPrefs(getContext(), "corner_tr"));
+            cornerBottomLeft.setProgress(Utils.getDimensionPrefs(getContext(), "corner_bl"));
+            cornerBottomRight.setProgress(Utils.getDimensionPrefs(getContext(), "corner_br"));
 
-        switchCorners.setChecked(Utils.getBooleanPrefs(getContext(), "switch_corner"));
+            switchCorners.setChecked(Utils.getBooleanPrefs(getContext(), "switch_corner"));
 
-        switchCorners.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                Utils.setBooleanPrefs(getContext(), "switch_corner", b);
-            }
-        });
-
+            switchCorners.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    Utils.setBooleanPrefs(getContext(), "switch_corner", b);
+                }
+            });
+        }
         return view;
     }
 
