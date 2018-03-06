@@ -15,10 +15,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
-import java.util.Random;
-
-public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener{
+public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private DisplayMetrics displayMetrics;
     private GradientDrawable drawable;
@@ -54,19 +53,36 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+
         drawable = new GradientDrawable();
 
+        //set button corner radii...
         if (Utils.getBooleanPrefs(context, "switch_corner")) {
-            drawable.setCornerRadii(new float[]{convertDpToPx(Utils.getDimensionPrefs(context, "corner_tl")), convertDpToPx(Utils.getDimensionPrefs(context, "corner_tl")), convertDpToPx(Utils.getDimensionPrefs(context, "corner_tr")), convertDpToPx(Utils.getDimensionPrefs(context, "corner_tr")), convertDpToPx(Utils.getDimensionPrefs(context, "corner_br")), convertDpToPx(Utils.getDimensionPrefs(context, "corner_br")), convertDpToPx(Utils.getDimensionPrefs(context, "corner_bl")), convertDpToPx(Utils.getDimensionPrefs(context, "corner_bl"))});
+            drawable.setCornerRadii(new float[]{
+                    convertDpToPx(Utils.getDimensionPrefs(context, "corner_tl")),
+                    convertDpToPx(Utils.getDimensionPrefs(context, "corner_tl")),
+                    convertDpToPx(Utils.getDimensionPrefs(context, "corner_tr")),
+                    convertDpToPx(Utils.getDimensionPrefs(context, "corner_tr")),
+                    convertDpToPx(Utils.getDimensionPrefs(context, "corner_br")),
+                    convertDpToPx(Utils.getDimensionPrefs(context, "corner_br")),
+                    convertDpToPx(Utils.getDimensionPrefs(context, "corner_bl")),
+                    convertDpToPx(Utils.getDimensionPrefs(context, "corner_bl"))
+            });
         } else {
             int globalCornerRadius = Utils.getDimensionPrefs(context, "corner_all");
             drawable.setCornerRadii(new float[]{convertDpToPx(globalCornerRadius), convertDpToPx(globalCornerRadius), convertDpToPx(globalCornerRadius), convertDpToPx(globalCornerRadius), convertDpToPx(globalCornerRadius), convertDpToPx(globalCornerRadius), convertDpToPx(globalCornerRadius), convertDpToPx(globalCornerRadius)});
         }
 
+        //set button border width and color...
         int sw = Utils.getDimensionPrefs(context, "stroke_width");
         drawable.setStroke(convertDpToPx(sw), Color.parseColor(Utils.getColorPrefs(context, "stroke_color")));
+
+        //set button color(s)...
         drawable.setColor(Color.parseColor("#90CAF9"));
 
+        //set button width and height...
+        int w = Utils.getDimensionPrefs(context, "size_width"), h = Utils.getDimensionPrefs(context, "size_height");
+        btn.setLayoutParams(new LinearLayout.LayoutParams(Utils.getBooleanPrefs(context, "switch_width") ? LinearLayout.LayoutParams.WRAP_CONTENT : convertDpToPx(w), Utils.getBooleanPrefs(context, "switch_height") ? LinearLayout.LayoutParams.WRAP_CONTENT : convertDpToPx(h)));
 
         btn.setBackground(drawable);
     }
