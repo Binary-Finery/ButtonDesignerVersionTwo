@@ -102,6 +102,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
                     return new Frag2();
                 case 2:
                     return new Frag3();
+                case 3:
+                    return new Frag4();
                 default:
                     return null;
             }
@@ -109,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         @Override
         public int getCount() {
-            return 3;
+            return 4;
         }
     }
 
