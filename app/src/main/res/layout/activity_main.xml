@@ -77,10 +77,7 @@
         <Button
             android:id="@+id/button_preview"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TEST BUTTON PREVIEW"
-            android:textSize="24sp"
-            android:fontFamily="sans-serif-smallcaps"/>
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
