@@ -1,5 +1,6 @@
 package spencerstudios.com.buttondesignerversiontwo;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -7,6 +8,7 @@ import android.support.v7.widget.AppCompatSeekBar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -14,6 +16,9 @@ import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import com.pes.androidmaterialcolorpickerdialog.ColorPicker;
+import com.pes.androidmaterialcolorpickerdialog.ColorPickerCallback;
 
 import java.util.Locale;
 
@@ -26,6 +31,9 @@ public class Frag4 extends Fragment implements SeekBar.OnSeekBarChangeListener {
     private Switch useGradient, threeColors;
     private RadioButton radLinear, radRadial;
     private AppCompatSeekBar seekAngle, seekCenX, seekCenY, seekRad;
+    private Button color1, color2, color3;
+    private ColorPicker cp;
+    private int colorIndex = 0;
 
     @Nullable
     @Override
@@ -37,7 +45,36 @@ public class Frag4 extends Fragment implements SeekBar.OnSeekBarChangeListener {
 
             initiateViews();
 
-            radRadial.setChecked(Utils.getBooleanPrefs(getActivity(), "use_radial"));
+            color1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    colorIndex = 1;
+                    cp.show();
+                }
+            });
+            color2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    colorIndex = 2;
+                    cp.show();
+                }
+            });
+            color3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    colorIndex = 3;
+                    cp.show();
+                }
+            });
+
+
+            threeColors.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    Utils.setBooleanPrefs(getActivity(), "use_three_colors", b);
+                    configLayouts();
+                }
+            });
 
             radRadial.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -53,13 +90,36 @@ public class Frag4 extends Fragment implements SeekBar.OnSeekBarChangeListener {
                 }
             });
 
-            useGradient.setChecked(Utils.getBooleanPrefs(getActivity(), "use_gradient"));
-
             useGradient.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     Utils.setBooleanPrefs(getActivity(), "use_gradient", b);
                     configLayouts();
+                }
+            });
+
+            cp = new ColorPicker(getActivity(), 50,50,50);
+            cp.setCallback(new ColorPickerCallback() {
+                @Override
+                public void onColorChosen(int color) {
+                    String hex = String.format("#%06X", (0xFFFFFF & color));
+                    String key = "";
+                    switch (colorIndex){
+                        case 1:
+                            key = "color1";
+                            color1.setBackgroundColor(Color.parseColor(hex));
+                            break;
+                        case 2:
+                            key = "color2";
+                            color2.setBackgroundColor(Color.parseColor(hex));
+                            break;
+                        case 3:
+                            key = "color3";
+                            color3.setBackgroundColor(Color.parseColor(hex));
+                            break;
+                    }
+                    Utils.setColorPrefs(getActivity(), key, hex);
+                    cp.dismiss();
                 }
             });
 
@@ -70,8 +130,16 @@ public class Frag4 extends Fragment implements SeekBar.OnSeekBarChangeListener {
     }
 
     private void configLayouts() {
+
         if (Utils.getBooleanPrefs(getActivity(), "use_gradient")) {
+
             radioGroupGradientType.setVisibility(View.VISIBLE);
+
+            threeColors.setVisibility(View.VISIBLE);
+            color1.setVisibility(View.VISIBLE);
+            color2.setVisibility(View.VISIBLE);
+            color3.setVisibility(Utils.getBooleanPrefs(getActivity(), "use_three_colors") ? View.VISIBLE : View.GONE);
+
             if (Utils.getBooleanPrefs(getActivity(), "use_radial")) {
                 radRadial.setChecked(true);
                 radContainer.setVisibility(View.VISIBLE);
@@ -85,6 +153,9 @@ public class Frag4 extends Fragment implements SeekBar.OnSeekBarChangeListener {
             angelContainer.setVisibility(View.GONE);
             radContainer.setVisibility(View.GONE);
             radioGroupGradientType.setVisibility(View.GONE);
+            threeColors.setVisibility(View.GONE);
+            color2.setVisibility(View.GONE);
+            color3.setVisibility(View.GONE);
         }
     }
 
@@ -109,14 +180,17 @@ public class Frag4 extends Fragment implements SeekBar.OnSeekBarChangeListener {
                 break;
 
             case R.id.seek_angle:
-                tvAngelDegrees.setText(String.format(Locale.getDefault(), "%d degress", i+45));
-                Utils.setDimensionPrefs(getActivity(), "angel", i + 45);
-
-
+                tvAngelDegrees.setText(String.format(Locale.getDefault(), "%d degrees", (i*45)));
+                Utils.setDimensionPrefs(getActivity(), "angel", i);
         }
     }
 
     private void setValues(){
+
+        useGradient.setChecked(Utils.getBooleanPrefs(getActivity(), "use_gradient"));
+        radRadial.setChecked(Utils.getBooleanPrefs(getActivity(), "use_radial"));
+        threeColors.setChecked(Utils.getBooleanPrefs(getActivity(), "use_three_colors"));
+
         seekCenX.setProgress(Utils.getDimensionPrefs(getActivity(), "center_x"));
         tvCenXDeg.setText(String.format(Locale.getDefault(), "%d%%", Utils.getDimensionPrefs(getActivity(), "center_x")));
 
@@ -125,6 +199,13 @@ public class Frag4 extends Fragment implements SeekBar.OnSeekBarChangeListener {
 
         seekRad.setProgress(Utils.getDimensionPrefs(getActivity(), "radius"));
         tvRadDp.setText(String.format(Locale.getDefault(), "%d DP", Utils.getDimensionPrefs(getActivity(), "radius")));
+
+        seekAngle.setProgress(Utils.getDimensionPrefs(getActivity(), "angle"));
+        tvAngelDegrees.setText(String.format(Locale.getDefault(), "%d degrees",(Utils.getDimensionPrefs(getActivity(), "angle")*45)));
+
+        color1.setBackgroundColor(Color.parseColor(Utils.getColorPrefs(getActivity(), "color1")));
+        color2.setBackgroundColor(Color.parseColor(Utils.getColorPrefs(getActivity(), "color2")));
+        color3.setBackgroundColor(Color.parseColor(Utils.getColorPrefs(getActivity(), "color3")));
 
     }
 
@@ -137,7 +218,6 @@ public class Frag4 extends Fragment implements SeekBar.OnSeekBarChangeListener {
     public void onStopTrackingTouch(SeekBar seekBar) {
 
     }
-
 
     private void initiateViews() {
         radioGroupGradientType = view.findViewById(R.id.radio_gradient_type);
@@ -160,6 +240,10 @@ public class Frag4 extends Fragment implements SeekBar.OnSeekBarChangeListener {
 
         useGradient = view.findViewById(R.id.switch_use_gradient);
         threeColors = view.findViewById(R.id.switch_use_3_colors);
+
+        color1 = view.findViewById(R.id.btn_color_one);
+        color2 = view.findViewById(R.id.btn_color_two);
+        color3 = view.findViewById(R.id.btn_color_three);
 
         seekAngle.setOnSeekBarChangeListener(this);
         seekCenX.setOnSeekBarChangeListener(this);

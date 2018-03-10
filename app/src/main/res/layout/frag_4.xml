@@ -63,15 +63,15 @@
         <android.support.v7.widget.AppCompatSeekBar
             android:id="@+id/seek_angle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:max="6"/>
 
         <TextView
             android:id="@+id/tv_angle_degrees"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:fontFamily="sans-serif-smallcaps"
-            android:text="180 degrees" />
+            android:fontFamily="sans-serif-smallcaps" />
 
         </LinearLayout>
 
@@ -161,5 +161,27 @@
             android:text="Use three colors"
             android:textColor="@color/textColor" />
 
+        <Button
+            android:layout_marginTop="16dp"
+            android:id="@+id/btn_color_one"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#424242"/>
+
+        <Button
+            android:layout_marginTop="16dp"
+            android:id="@+id/btn_color_two"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#424242"/>
+
+        <Button
+            android:layout_marginTop="16dp"
+            android:id="@+id/btn_color_three"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#424242"/>
+
     </LinearLayout>
+
 </ScrollView>

@@ -15,14 +15,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private Button button;
     private SharedPreferences prefs;
     private Context ctx = this;
+    private LinearLayout buttonContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,17 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        buttonContainer = findViewById(R.id.ll_btn_container);
+
+        buttonContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Utils.setDimensionPrefs(ctx, "parent_width", convertDpToPx(buttonContainer.getWidth()));
+                Toast.makeText(ctx, ""+convertDpToPx(buttonContainer.getWidth()) + " dp", Toast.LENGTH_LONG).show();
+                buttonContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
