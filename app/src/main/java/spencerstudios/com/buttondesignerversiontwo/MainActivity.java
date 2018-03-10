@@ -2,8 +2,10 @@ package spencerstudios.com.buttondesignerversiontwo;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.media.VolumeShaper;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
@@ -25,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private Button button;
     private SharedPreferences prefs;
     private Context ctx = this;
-    private LinearLayout buttonContainer;
     private final GradientDrawable.Orientation[] ORIENTATION = {GradientDrawable.Orientation.LEFT_RIGHT, GradientDrawable.Orientation.BL_TR, GradientDrawable.Orientation.BOTTOM_TOP, GradientDrawable.Orientation.BR_TL, GradientDrawable.Orientation.RIGHT_LEFT, GradientDrawable.Orientation.TR_BL, GradientDrawable.Orientation.TOP_BOTTOM};
 
     @Override
@@ -35,7 +36,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        buttonContainer = findViewById(R.id.ll_btn_container);
+        Configuration configuration = ctx.getResources().getConfiguration();
+        Utils.setDimensionPrefs(ctx, "screen_width_in_dp",configuration.screenWidthDp);
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
@@ -131,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         //set text color..
         button.setTextColor(Color.parseColor(Utils.getColorPrefs(ctx, "text_color")));
 
-        //set button color(s)...
+        //set button color(s) and gradient type...
         boolean hasGradient = Utils.getBooleanPrefs(ctx, "use_gradient");
         boolean isRadial = Utils.getBooleanPrefs(ctx, "use_radial");
         boolean isThreeColors = Utils.getBooleanPrefs(ctx, "use_three_colors");
