@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     private SharedPreferences prefs;
     private Context ctx = this;
     private LinearLayout buttonContainer;
+    private final GradientDrawable.Orientation[] ORIENTATION = {GradientDrawable.Orientation.LEFT_RIGHT, GradientDrawable.Orientation.BL_TR, GradientDrawable.Orientation.BOTTOM_TOP, GradientDrawable.Orientation.BR_TL, GradientDrawable.Orientation.RIGHT_LEFT, GradientDrawable.Orientation.TR_BL, GradientDrawable.Orientation.TOP_BOTTOM};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,15 +36,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         setSupportActionBar(toolbar);
 
         buttonContainer = findViewById(R.id.ll_btn_container);
-
-        buttonContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                Utils.setDimensionPrefs(ctx, "parent_width", convertDpToPx(buttonContainer.getWidth()));
-                Toast.makeText(ctx, ""+convertDpToPx(buttonContainer.getWidth()) + " dp", Toast.LENGTH_LONG).show();
-                buttonContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-            }
-        });
 
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
@@ -107,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         finishAffinity();
     }
 
-    private void applyButtonProperties(){
+    private void applyButtonProperties() {
 
         GradientDrawable drawable = new GradientDrawable();
 
@@ -125,9 +117,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         int sw = Utils.getDimensionPrefs(ctx, "stroke_width");
         drawable.setStroke(convertDpToPx(sw), Color.parseColor(Utils.getColorPrefs(ctx, "stroke_color")));
 
-        //set button color(s)...
-        drawable.setColor(Color.parseColor("#90CAF9"));
-
         //set button width and height...
         int w = Utils.getDimensionPrefs(ctx, "size_width"), h = Utils.getDimensionPrefs(ctx, "size_height");
         button.setLayoutParams(new LinearLayout.LayoutParams(Utils.getBooleanPrefs(ctx, "switch_width") ? LinearLayout.LayoutParams.WRAP_CONTENT : convertDpToPx(w), Utils.getBooleanPrefs(ctx, "switch_height") ? LinearLayout.LayoutParams.WRAP_CONTENT : convertDpToPx(h)));
@@ -142,7 +131,42 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         //set text color..
         button.setTextColor(Color.parseColor(Utils.getColorPrefs(ctx, "text_color")));
 
-        button.setBackground(drawable);
+        //set button color(s)...
+        boolean hasGradient = Utils.getBooleanPrefs(ctx, "use_gradient");
+        boolean isRadial = Utils.getBooleanPrefs(ctx, "use_radial");
+        boolean isThreeColors = Utils.getBooleanPrefs(ctx, "use_three_colors");
 
+        if (hasGradient) {
+
+            if (isRadial) {
+
+                drawable.setGradientType(GradientDrawable.RADIAL_GRADIENT);
+
+                drawable.setGradientCenter((float) Utils.getDimensionPrefs(ctx, "center_x") / 100, (float) Utils.getDimensionPrefs(ctx, "center_y") / 100);
+
+                drawable.setGradientRadius(convertDpToPx(Utils.getDimensionPrefs(ctx, "radius")));
+
+                if (isThreeColors) {
+                    int[] colors = {Color.parseColor(Utils.getColorPrefs(ctx, "color1")), Color.parseColor(Utils.getColorPrefs(ctx, "color2")), Color.parseColor(Utils.getColorPrefs(ctx, "color3"))};
+                    drawable.setColors(colors);
+                } else {
+                    int[] colors = {Color.parseColor(Utils.getColorPrefs(ctx, "color1")), Color.parseColor(Utils.getColorPrefs(ctx, "color2"))};
+                    drawable.setColors(colors);
+                }
+            } else {
+                drawable.setGradientType(GradientDrawable.LINEAR_GRADIENT);
+                drawable.setOrientation(ORIENTATION[Utils.getDimensionPrefs(ctx, "angel")]);
+                if (isThreeColors) {
+                    int[] colors = {Color.parseColor(Utils.getColorPrefs(ctx, "color1")), Color.parseColor(Utils.getColorPrefs(ctx, "color2")), Color.parseColor(Utils.getColorPrefs(ctx, "color3"))
+                    };
+                    drawable.setColors(colors);
+                } else {
+                    int[] colors = {Color.parseColor(Utils.getColorPrefs(ctx, "color1")), Color.parseColor(Utils.getColorPrefs(ctx, "color2"))};
+                    drawable.setColors(colors);
+                }
+            }
+        } else drawable.setColor(Color.parseColor(Utils.getColorPrefs(ctx, "color1")));
+
+        button.setBackground(drawable);
     }
 }
